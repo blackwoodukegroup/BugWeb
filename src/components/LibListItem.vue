@@ -1,5 +1,7 @@
 <template>
-  <b-list-group-item href="#">{{ liblistitem.title }}</b-list-group-item>
+  <b-list-group-item href="#">
+    <span>{{ liblistitem.title }} - {{ liblistitem.artist }}</span>
+  </b-list-group-item>
 </template>
 
 <script>

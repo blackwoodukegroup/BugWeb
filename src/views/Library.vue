@@ -1,21 +1,18 @@
 <template>
   <div class="library">
     <h2>Library</h2>
-    <LibSearch />
     <LibList :librarydata="this.librarydata" />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import LibSearch from "@/components/LibSearch.vue";
 import LibList from "@/components/LibList.vue";
 import axios from "axios";
 
 export default {
   name: "Library",
   components: {
-    LibSearch,
     LibList,
   },
   data: function () {
@@ -32,7 +29,7 @@ export default {
         )
         .then((response) => {
           this.librarydata = response.data;
-          console.log("loaded");
+          console.log("loaded " + Object.keys(this.librarydata).length + " songs");
         })
         .catch((err) => console.log(err));
     } else {
