@@ -1,13 +1,13 @@
 <template>
   <div class="library">
-    <h2>Library</h2>
+    <h2>BUG Song Library</h2>
     <b-row>
       <b-col>
-        <div v-if="librarydata == null">
+        <div v-if="songLib == null">
           <b-spinner label="loading library data..."></b-spinner>
         </div>
         <div v-else>
-          <LibList :librarydata="this.librarydata" v-on:itemselected="itemselected" />
+          <LibList :songLib="this.songLib" />
         </div>
       </b-col>
     </b-row>
@@ -17,6 +17,8 @@
 <script>
 // @ is an alias to /src
 import LibList from "@/components/LibList.vue";
+import SongLib from "@/classes/songlib.js";
+
 // import LibItemDetail from "@/components/LibItemDetail.vue";
 
 import axios from "axios";
@@ -29,51 +31,25 @@ export default {
   },
   data: function () {
     return {
-      librarydata: null,
-      selecteditem: null
+      // selectedSong: null,
+      songLib: null
     };
   },
   methods: {
-    itemselected(event){
-      this.selecteditem = event
-    }
+    // songSelected(event){
+    //   this.selectedSong = event
+    // }
   },
   created: function () {
-    if (this.librarydata == null) {
-      console.log("loading library data...");
+    if (this.songLib == null) {
+      console.log("loading song library data...");
       axios
         .get(
-          "https://script.google.com/macros/s/AKfycbx-0s1grPv0Wj_wXZUDRggB7Eac_c4TGHkMQ1aNOcNv41eCeg/exec"
+          "https://script.google.com/macros/s/AKfycbxoeTQ5zyiDHMa3pUAbGk4Navv2gzJqnZOd_X3YuQvSLIV2gBA/exec"
         )
         .then((response) => {
-          this.librarydata = response.data;
-          console.log("loaded " + Object.keys(this.librarydata).length + " songs");
-
-          var noDate = []
-          Object.keys(this.librarydata).forEach(key => {
-            // console.log(key)
-            var song = this.librarydata[key]
-            // console.log(song.title)
-            Object.keys(song.URL).forEach(key => {
-              var url = song.URL[key]
-              // console.log(`${key}: ${url.LastUpdated} ${url.URL}`)
-              if ( typeof url.LastUpdated == 'undefined' ) {
-                if ( url.URL.match(/scorpex|ozbcoz/i) ) noDate.push(url)
-              }
-            })
-          })
-          console.log(noDate.length)
-          noDate.forEach(item => {
-            console.log(`- get date for ${item.URL}`)
-            axios
-              .head(item.URL)
-              .then((response) => {
-                console.log(`- response for ${item.URL}`)
-                console.log(response.data)
-
-              })
-              .catch((err) => console.log(err))
-          })
+          this.songLib = new SongLib(response.data.data);
+          console.log("loaded " + this.songLib.getSongCount() + " songs");
         })
         .catch((err) => console.log(err));
     }

@@ -5,23 +5,27 @@
           <b-nav-text>Sort by:</b-nav-text>
           <b-nav-item data-sortprop="title">Title</b-nav-item>
           <b-nav-item data-sortprop="artist">Artist</b-nav-item>
-          <b-nav-item data-sortprop="date">Date</b-nav-item>
+          <b-nav-item data-sortprop="mostRecentChartUpdate">Date</b-nav-item>
           <b-nav-form>
+              <b-nav-text id="navlabel-search">Search: </b-nav-text>
+              <b-form-input debounce="500" v-model="searchParameter" placeholder="title / artist" type="search" style="ml-12;"></b-form-input>        
               <b-nav-text id="navlabel-filter">Filter: </b-nav-text>
-              <b-form-input debounce="500" v-model="listfilter" placeholder="filter criteria" style="ml-12;"></b-form-input>        
+              <b-form-select v-model="filterSelected" :options="filterOptions"></b-form-select>
           </b-nav-form>
       </b-nav>
     </div>
-    <b-list-group v-on:click="itemClicked" style="height:100%; overflow:auto">
-      <div v-for="(item, itemid) in orderedlibdata" v-bind:key="itemid" v-bind:data-itemid="item">
-        <div v-if="item == selectedItem">
-          <b-card :title="librarydata[item].title" :sub-title="librarydata[item].artist" class="mb-1">
-            <b-button class="mr-1 mb-1" v-for="url in getkeys(librarydata[item].URL)" v-bind:href="librarydata[item].URL[url].URL" target="_blank" v-bind:key="url">{{ url }}</b-button>
+    <b-list-group v-on:click="songClicked" style="height:100%; overflow:auto">
+      <div v-for="song in this.songLib.getSongList(this.sortprop, this.sortdescending, this.searchParameter)" v-bind:key="song.id" v-bind:data-songid="song.id">
+        <div v-if="song.id == selectedSong">
+          <b-card :title="song.title" :sub-title="song.artist" class="mb-1">
+            <p class="mr-1 mb-1" v-for="note in song.notes" v-bind:key="note.id">{{ note.note }}</p>
+            <b-button class="mr-1 mb-1" v-for="chart in song.charts" v-bind:href="chart.url" target="_blank" v-bind:key="chart.id">{{ chart.description }}</b-button>
+            <b-button class="mr-1 mb-1" v-for="link in song.links" v-bind:href="link.url" target="_blank" v-bind:key="link.id">{{ link.description }}</b-button>
           </b-card>
         </div>
         <div v-else>
           <b-list-group-item href="#" class="mb-1">
-            <span>{{ librarydata[item].title }} - {{ librarydata[item].artist }}</span>
+            <span>{{ song.title }} - {{ song.artist }}</span>
           </b-list-group-item>
         </div>
       </div>
@@ -32,6 +36,7 @@
 
 
 <script>
+import SongLib from "@/classes/songlib.js";
 // import LibListItem from "@/components/LibListItem.vue";
 
 export default {
@@ -40,60 +45,42 @@ export default {
     return {
       sortprop: "title",
       sortdescending: false,
-      listfilter: "",
-      selectedItem: null
+      searchParameter: "",
+      selectedSong: null,
+      filterSelected: null,
+      filterOptions: [
+        { value: null, text: "show all" },
+        { value: 1, text: "just charts" },
+        { value: 2, text: "just songbooks" }
+      ]
     }
   },
   props: {
-      librarydata: Object
+      songLib: SongLib
   },
   components: {
-    // LibListItem
   },
   methods: {
-    itemClicked: function(event){
-      var e = event.srcElement
-      while ( typeof e.dataset.itemid == 'undefined') e = e.parentElement
-      this.selectedItem = e.dataset.itemid
-      this.$emit("itemselected", this.librarydata[this.selectedItem])
-    },
-    getkeys(o){
-      if (o != null) {
-          return Object.keys(o)
-      } else {
-          return []
-      }
+    songClicked: function(event){
+      var e = event.srcElement;
+      console.log(e, typeof(e));
+      while ( typeof e.dataset.songid == 'undefined') e = e.parentElement;
+      this.selectedSong = e.dataset.songid;
+      // this.$emit("songSelected", this.librarydata[this.selectedSong]);
     },
     sortclick: function(event){
       var e = event.srcElement
       while (e != null && e.dataset.sortprop == null) e = e.parentElement
       console.log(e.dataset.sortprop)
       if (e.dataset.sortprop ) {
-       if (e.dataset.sortprop == this.sortprop) this.sortdescending = ! this.sortdescending
+        if (e.dataset.sortprop == this.sortprop) 
+          this.sortdescending = ! this.sortdescending;
+        else
+          this.sortdescending = false;
         this.sortprop = e.dataset.sortprop
       }
+      this.selectedSong == null;
     }
-  },
-  computed: {
-      orderedlibdata: function() {
-        if (this.librarydata == null) {
-            return {}
-        } else {
-            var librarydatakeys = Object.keys(this.librarydata)
-            librarydatakeys.sort((a,b) => {
-                return (a > b ? 1 : -1)
-            }) 
-            if (this.listfilter) {
-                var re = new RegExp(this.listfilter, "i")
-                var filteredkeys = librarydatakeys.filter(v => {
-                    return re.test(this.librarydata[v].title) || re.test(this.librarydata[v].artist)
-                })
-                return filteredkeys
-            } else {
-                return librarydatakeys
-            }
-        }
-      }
   }
 }
 </script>
