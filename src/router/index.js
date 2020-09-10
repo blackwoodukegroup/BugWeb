@@ -23,6 +23,16 @@ Vue.use(VueRouter)
     path: "/library",
     name: "Library",
     component: () => import("../views/Library.vue")
+  },
+  {
+    path: "/playlists",
+    name: "Playlists",
+    component: () => import("../views/Playlists.vue")
+  },
+  {
+    path: "/login",
+    name: "Login",
+    component: () => import("../views/Login.vue")
   }
 ]
 

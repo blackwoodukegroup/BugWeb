@@ -2,6 +2,9 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import VueCryptojs from "vue-cryptojs";
+
+Vue.use(VueCryptojs);
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin )

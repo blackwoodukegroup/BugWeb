@@ -63,17 +63,19 @@ export default {
   methods: {
     songClicked: function(event){
       var e = event.srcElement;
-      console.log(e, typeof(e));
       while ( typeof e.dataset.songid == 'undefined') e = e.parentElement;
-      this.selectedSong = e.dataset.songid;
+      if ( this.selectedSong == e.dataset.songid && event.target.tagName != "A" ){
+        this.selectedSong = null;
+      }
+      else
+        this.selectedSong = e.dataset.songid;
       // this.$emit("songSelected", this.librarydata[this.selectedSong]);
     },
     sortclick: function(event){
-      var e = event.srcElement
+      var e = event.target
       while (e != null && e.dataset.sortprop == null) e = e.parentElement
-      console.log(e.dataset.sortprop)
       if (e.dataset.sortprop ) {
-        if (e.dataset.sortprop == this.sortprop) 
+        if (e.dataset.sortprop == this.sortprop ) 
           this.sortdescending = ! this.sortdescending;
         else
           this.sortdescending = false;
