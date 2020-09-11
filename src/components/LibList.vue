@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     songClicked: function(event){
-      var e = event.srcElement;
+      var e = event.target;
       while ( typeof e.dataset.songid == 'undefined') e = e.parentElement;
       if ( this.selectedSong == e.dataset.songid && event.target.tagName != "A" ){
         this.selectedSong = null;

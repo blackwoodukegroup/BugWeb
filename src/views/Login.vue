@@ -8,7 +8,7 @@
                 <b-form-input id="inputUsername" type="text" class="mr-2" v-model="username"/>
                 <label for="inputPassword" class="mr-2">Password</label>
                 <b-form-input type="password" class="mr-2" v-model="password" name="password" id="inputPassword" />
-                <b-button type="submit" variant="primary" v- v-bind:disabled="!validInputs" v-on:click.prevent="doLogin">
+                <b-button type="submit" variant="primary" v-bind:disabled="!validInputs" v-on:click.prevent="doLogin">
                     <b-spinner v-if="showSpinner" small></b-spinner>
                     {{ loginButtonText }}
                 </b-button>    
@@ -43,7 +43,7 @@ export default {
   },
   computed: {
       userToken() {
-          return this.$store.userToken
+          return this.$store.userToken;
       },
       validInputs() {
           return ( this.username != null && this.username.length > 0 && this.password != null && this.password.length > 0 );

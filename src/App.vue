@@ -8,9 +8,6 @@
         <b-nav-item><router-link to="/playlists">Playlists</router-link></b-nav-item>
         <b-nav-item><router-link to="/admin">Admin</router-link></b-nav-item>
       </b-navbar-nav>
-      <b-navbar-nav fill="true" align="right">
-        <b-nav-item>User</b-nav-item>
-      </b-navbar-nav>
     </b-navbar>
     <router-view/>
   </div>
