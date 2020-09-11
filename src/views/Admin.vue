@@ -1,5 +1,6 @@
 <template>
-  <div class="playlists">
+  <div class="admin">
+      <h1>admin view</h1>
   </div>
 </template>
 
@@ -8,14 +9,9 @@
 // import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
-  name: 'Playlists',
+  name: 'Admin',
   components: {
    // HelloWorld
-  },
-  computed: {
-    userToken() {
-        return this.$store.userToken
-    }
   }
 }
 </script>

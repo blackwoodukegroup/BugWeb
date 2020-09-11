@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <b-alert variant="success" show>Success Alert</b-alert>
+
   </div>
 </template>
 

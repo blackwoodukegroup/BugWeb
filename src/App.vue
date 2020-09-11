@@ -1,11 +1,17 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/library">Song Library</router-link> |
-      <router-link to="/playlists">Playlists</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
+    <b-navbar id="nav">
+      <b-navbar-brand href="#">BUGweb</b-navbar-brand>
+      <b-navbar-nav>
+        <b-nav-item><router-link to="/">Home</router-link></b-nav-item>
+        <b-nav-item><router-link to="/library">Song Library</router-link></b-nav-item>
+        <b-nav-item><router-link to="/playlists">Playlists</router-link></b-nav-item>
+        <b-nav-item><router-link to="/admin">Admin</router-link></b-nav-item>
+      </b-navbar-nav>
+      <b-navbar-nav fill="true" align="right">
+        <b-nav-item>User</b-nav-item>
+      </b-navbar-nav>
+    </b-navbar>
     <router-view/>
   </div>
 </template>
