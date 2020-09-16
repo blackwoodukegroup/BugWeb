@@ -28,9 +28,6 @@ import axios from "axios";
 
 export default {
   name: 'Login',
-  components: {
-   // HelloWorld
-  },
   data: function() {
       return {
           username: null,

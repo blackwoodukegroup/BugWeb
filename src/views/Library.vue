@@ -1,16 +1,8 @@
 <template>
   <div class="library">
-    <h2>BUG Song Library</h2>
-    <b-row>
-      <b-col>
-        <div v-if="songLib == null">
-          <b-spinner label="loading library data..."></b-spinner>
-        </div>
-        <div v-else>
-          <LibList :songLib="this.songLib" />
-        </div>
-      </b-col>
-    </b-row>
+    <b-overlay :show="songLib == null">
+      <LibList :songLib="this.songLib" />
+    </b-overlay>
   </div>
 </template>
 

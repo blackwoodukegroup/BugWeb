@@ -1,13 +1,13 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue'
 import VueCryptojs from "vue-cryptojs";
 
 Vue.use(VueCryptojs);
 
 Vue.use(BootstrapVue)
-Vue.use(IconsPlugin )
+Vue.use(BootstrapVueIcons)
 
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
