@@ -1,6 +1,6 @@
 <template>
   <div class="admin">
-    <b-overlay :show="! this.userList">
+    <b-overlay :show="! this.userList || savingUser">
       <b-dropdown id="selectUser" :text="dropdownText" :disabled="editFormDirty" class="m-md-2">
         <b-dropdown-item-button
           v-for="user in this.userList"
@@ -15,6 +15,7 @@
       <hr />
       <UserEdit :initial-user="selectedUser" :new-user="newUserMode" @saveUser="saveUser" @formDirty="formDirty" />
     </b-overlay>
+
   </div>
 </template>
 
@@ -24,6 +25,8 @@
 
 import axios from "axios";
 import UserEdit from "@/components/UserEdit.vue";
+/// import HelperLib from "@/classes/helperlib.js";
+import UserLib from "@/classes/userlib.js";
 
 export default {
   name: "Admin",
@@ -35,7 +38,8 @@ export default {
       userList: null,
       selectedUser: null,
       newUserMode: false,
-      editFormDirty: false
+      editFormDirty: false,
+      savingUser: false
     };
   },
   computed: {
@@ -58,9 +62,17 @@ export default {
             this.$store.userToken
         )
         .then((response) => {
-          this.userList = response.data.data;
+          if ( response.data.status == "success" )
+            this.userList = response.data.data;
+          else {
+            alert("ERROR: " + response.data.message);
+            console.log(response.data.message);
+          }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          alert("ERROR: " + err.message);
+          console.log(err)
+        });
     }
   },
   methods: {
@@ -76,11 +88,7 @@ export default {
     newUser: function(){
       this.selectedUser = null;
       this.newUserMode = true;
-      this.selectedUser = {
-        username: "",
-        fullname: "",
-        roles: []
-      }
+      this.selectedUser = UserLib.newUser();
     },
     saveUser: function(user) {
       console.log("Admin.saveUser: ", user)
@@ -94,6 +102,7 @@ export default {
           "?command=" + command + "&user-token=" +
           this.$store.userToken
 
+      this.savingUser = true;
       axios
         .post(
           url,
@@ -105,20 +114,30 @@ export default {
           }
         )
         .then((response) => {
-          // update the userList entry
-          if ( response.data == null ) {
-            // network error - should never get here
-          } else if ( response.data.status == "success" ) {
+          this.savingUser = false;
+
+          if ( response.data.status == "success" ) {
             console.log("user saved");
-            // yay - it worked
-            this.selectedUser.fullname = user.fullname
-            this.selectedUser.roles = user.roles.splice()
+            alert('user saved');
+
+            // no need to hang on the the password hash
+            delete user.passwordHash
+
+            if ( this.newUserMode ){
+              this.userList[user.username] = user;
+            } else {
+              Object.assign(this.selectedUser, user);
+            }
           } else {
-            console.log("save failed:", response.data.message);
+            console.log(response.data.message);
+            alert('ERROR: ' + response.data.message);
           }
         }
         )
-        .catch((err) => console.log(err))
+        .catch((err) => {
+          this.savingUser = false;
+          console.log(err)
+        });
     },
     formDirty: function(status){
       console.log("Admin.formDirty: ", status)

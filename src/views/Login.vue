@@ -2,7 +2,6 @@
     <div class="login">
         <b-alert v-if="alertMessage" v-bind:variant="alertType" show>{{ alertMessage }}</b-alert>
         <div v-if="userToken == null">
-            <p>The feature you've selected is only available to authorised users</p>
             <b-form inline>
                 <label for="inputUsername" class="mr-2">Username</label>
                 <b-form-input id="inputUsername" type="text" class="mr-2" v-model="username"/>
@@ -80,7 +79,7 @@ export default {
                     }
                 } else {
                     this.$actions.setUserToken(null);
-                    this.showAlert("danger", "Login failed - please try again");
+                    this.showAlert("danger", "Login failed: " + response.data.message);
                     this.resetLoginForm();
                 }
             })
