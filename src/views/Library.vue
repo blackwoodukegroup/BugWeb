@@ -23,28 +23,21 @@ export default {
   },
   data: function () {
     return {
-      // selectedSong: null,
       songLib: null
     };
   },
-  methods: {
-    // songSelected(event){
-    //   this.selectedSong = event
-    // }
-  },
   created: function () {
-    if (this.songLib == null) {
-      console.log("loading song library data...");
-      axios
-        .get(
-          "https://script.google.com/macros/s/AKfycbxoeTQ5zyiDHMa3pUAbGk4Navv2gzJqnZOd_X3YuQvSLIV2gBA/exec"
-        )
-        .then((response) => {
-          this.songLib = new SongLib(response.data.data);
-          console.log("loaded " + this.songLib.getSongCount() + " songs");
-        })
-        .catch((err) => console.log(err));
-    }
+    axios
+      .get(
+        "https://script.google.com/macros/s/AKfycbxoeTQ5zyiDHMa3pUAbGk4Navv2gzJqnZOd_X3YuQvSLIV2gBA/exec"
+      )
+      .then((response) => {
+        this.songLib = new SongLib(response.data.data);
+        console.log("loaded " + this.songLib.getSongCount() + " songs");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

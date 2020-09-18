@@ -105,7 +105,7 @@ export default {
   data: function () {
     return {
       user: null,
-      allUserRoles: ["admin"],
+      allUserRoles: ["admin"],  // todo: get this list from the API
       formDirty: false,
       password: null,
       confirmPassword: null,

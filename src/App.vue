@@ -8,10 +8,28 @@
         <b-nav-item><router-link to="/playlists">Playlists</router-link></b-nav-item>
         <b-nav-item><router-link to="/admin">Admin</router-link></b-nav-item>
       </b-navbar-nav>
+      <b-navbar-nav class="ml-md-auto">
+        <b-nav-item><router-link to="/login">{{ loginText }}</router-link></b-nav-item>
+      </b-navbar-nav>
     </b-navbar>
     <router-view/>
   </div>
 </template>
+
+<script>
+export default {
+  computed: {
+    loginText: function(){
+
+      if ( this.$store.userToken == null )
+        return "Login";
+      else
+        return "Logout";
+    }
+  }
+  
+}
+</script>
 
 <style>
 #app {

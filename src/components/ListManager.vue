@@ -37,9 +37,6 @@
           >{{ item }}</b-dropdown-item>
         </b-dropdown>
       </b-list-group-item>
-      <b-list-group-item v-else>
-          (all roles are present)
-      </b-list-group-item>
     </b-list-group>
   </div>
 </template>

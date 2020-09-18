@@ -39,7 +39,8 @@ export default {
       selectedUser: null,
       newUserMode: false,
       editFormDirty: false,
-      savingUser: false
+      savingUser: false,
+      hideDisabledAccounts: true
     };
   },
   computed: {
@@ -106,12 +107,8 @@ export default {
       axios
         .post(
           url,
-          {
-            user: user
-          },
-          {
-            headers: {  'Content-Type': 'text/plain;charset=utf-8'}
-          }
+          { user: user },
+          { headers: { 'Content-Type': 'text/plain;charset=utf-8'} }
         )
         .then((response) => {
           this.savingUser = false;
