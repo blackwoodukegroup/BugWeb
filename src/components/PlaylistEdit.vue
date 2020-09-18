@@ -66,10 +66,15 @@
                     <p class="my-1 ml-2">{{ song.artist }}</p>
                     <div v-if="song.id == selectedLibrarySongId">
                         <b-overlay :show="showDefaultChartOverlay" variant="dark">
-                            <b-form-select
-                                v-model="defaultChartForSelectedLibrarySong"
-                                :options="chartsForSelectedLibrarySong"
-                            />
+                            <b-input-group>
+                                <b-input-group-prepend>
+                                    <b-button size="sm"><b-icon icon="bag-plus" aria-hidden="true"></b-icon></b-button>
+                                </b-input-group-prepend>
+                                    <b-form-select size="sm" 
+                                        v-model="defaultChartForSelectedLibrarySong"
+                                        :options="chartsForSelectedLibrarySong"
+                                    />
+                            </b-input-group>
                         </b-overlay>
                     </div>
                 </b-list-group-item>
