@@ -13,9 +13,6 @@
                 </b-button>    
             </b-form>
         </div>
-        <div v-else>
-            <b-button type="submit" variant="primary" @click.prevent="doLogout">Logout</b-button>
-        </div>
     </div>
 </template>
 
