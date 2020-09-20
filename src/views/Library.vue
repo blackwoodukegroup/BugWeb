@@ -7,12 +7,8 @@
 </template>
 
 <script>
-// @ is an alias to /src
-import LibList from "@/components/LibList.vue";
+import LibList from "@/components/library/LibList.vue";
 import SongLib from "@/classes/songlib.js";
-
-// import LibItemDetail from "@/components/LibItemDetail.vue";
-
 import axios from "axios";
 
 export default {

@@ -26,10 +26,8 @@
 
 <script>
 import Axios from "axios";
-import PlaylistBrowse from "@/components/PlaylistBrowse.vue";
-import PlaylistEdit from "@/components/PlaylistEdit.vue";
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
+import PlaylistBrowse from "@/components/playlist/PlaylistBrowse.vue";
+import PlaylistEdit from "@/components/playlist/PlaylistEdit.vue";
 
 export default {
   name: "Playlists",

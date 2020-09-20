@@ -63,7 +63,6 @@
 
 <script>
 import SongLib from "@/classes/songlib.js";
-// import LibListItem from "@/components/LibListItem.vue";
 
 export default {
   name: "LibList",

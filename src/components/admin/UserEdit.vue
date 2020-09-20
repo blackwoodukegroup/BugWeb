@@ -89,9 +89,7 @@
 
 <script>
 import UserLib from "@/classes/userlib.js";
-// import HelperLib from "@/classes/helperlib.js";
-
-import ListManager from "@/components/ListManager.vue";
+import ListManager from "@/components/admin/ListManager.vue";
 
 export default {
   name: "UserEdit",

@@ -20,12 +20,8 @@
 </template>
 
 <script>
-// @ is an alias to /src
-// import HelloWorld from '@/components/HelloWorld.vue'
-
 import axios from "axios";
-import UserEdit from "@/components/UserEdit.vue";
-/// import HelperLib from "@/classes/helperlib.js";
+import UserEdit from "@/components/admin/UserEdit.vue";
 import UserLib from "@/classes/userlib.js";
 
 export default {
