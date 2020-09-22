@@ -13,6 +13,9 @@
                 </b-button>    
             </b-form>
         </div>
+        <div v-else>
+            <b-button @click="doLogout">Logout</b-button>
+        </div>
     </div>
 </template>
 
@@ -61,6 +64,7 @@ export default {
                 this.showSpinner = false;
                 if ( response.data != null && response.data.data != null && response.data.data["user-token"] != null ) {
                     this.$actions.setUserToken(response.data.data["user-token"]);
+                    this.$store.currentUserUsername = this.username;
                     if ( this.$route.query.redirect ) {
                         this.showAlert("success", "Login Succesful - redirecting in 2 seconds");
                         var vm = this;
@@ -91,6 +95,7 @@ export default {
       },
       doLogout: function(){
           this.$actions.setUserToken(null);
+          this.$store.currentUserUsername = null;
           this.resetLoginForm();
           this.showAlert("success", "Logged out");
       },

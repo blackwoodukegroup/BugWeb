@@ -24,7 +24,11 @@ Vue.prototype.$appConstants = appConstants
 
 // global state store
 
-const store = Vue.observable({ userToken: null })
+const store = Vue.observable({ 
+  userToken: null,
+  currentUserUsername: null,
+  userDirectory: null
+})
 const storeActions = {
   setUserToken(newToken) {
     store.userToken = newToken

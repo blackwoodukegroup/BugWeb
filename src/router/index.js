@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
-//import Library from '../views/Library.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +26,27 @@ Vue.use(VueRouter)
     path: "/admin",
     name: "Admin",
     component: () => import("../views/Admin.vue"),
+    children: [
+      {
+        meta: { requiresAuth: true },
+        path: "/users",
+        name: "AdminUsers",
+        component: () => import("@/components/admin/users/UserList.vue")
+      },
+      {
+        meta: { requiresAuth: true },
+        path: "/users/:username/edit",
+        name: "AdminUsersEdit",
+        component: () => import("@/components/admin/users/UserEdit.vue"),
+        props: true
+      },
+      {
+        meta: { requiresAuth: true },
+        path: "/users/new",
+        name: "AdminUsersNew",
+        component: () => import("@/components/admin/users/UserEdit.vue")
+      }
+    ]
   },
   {
     path: "/login",

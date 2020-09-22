@@ -1,61 +1,71 @@
 <template>
   <div class="liblist">
     <div id="liblistheader">
-      <b-nav v-on:click="sortclick">
-        <b-nav-form>
-          <b-nav-text id="navlabel-search">Search:</b-nav-text>
-          <b-form-input
-            debounce="500"
-            v-model="searchParameter"
-            placeholder="title / artist"
-            type="search"
-            style="ml-12;"
-          ></b-form-input>
-          <b-nav-text id="navlabel-filter">Filter:</b-nav-text>
-          <b-form-select v-model="filterSelected" :options="filterOptions"></b-form-select>
-        </b-nav-form>
-        <b-nav-text>Sort by:</b-nav-text>
-        <b-nav-item data-sortprop="title">Title</b-nav-item>
-        <b-nav-item data-sortprop="artist">Artist</b-nav-item>
-        <b-nav-item data-sortprop="mostRecentChartUpdate">Date</b-nav-item>
-      </b-nav>
+      <b-row>
+        <b-col md="8" offset-md="2">
+          <b-nav>
+            <b-nav-form>
+              <b-nav-text id="navlabel-search">Search:</b-nav-text>
+              <b-form-input
+                debounce="500"
+                v-model="searchParameter"
+                placeholder="title / artist"
+                type="search"
+                style="ml-12;"
+              ></b-form-input>
+            </b-nav-form>
+            <b-nav-form>
+              <b-nav-text id="navlabel-filter">Filter:</b-nav-text>
+              <b-form-select v-model="filterSelected" :options="filterOptions"></b-form-select>
+            </b-nav-form>
+          </b-nav>
+          <b-nav v-on:click="sortclick">
+            <b-nav-text>Sort by:</b-nav-text>
+            <b-nav-item data-sortprop="title">Title</b-nav-item>
+            <b-nav-item data-sortprop="artist">Artist</b-nav-item>
+            <b-nav-item data-sortprop="mostRecentChartUpdate">Date</b-nav-item>
+          </b-nav>
+        </b-col>
+      </b-row>
     </div>
-    <b-col md="8" offset-md="2">
-      <b-list-group v-on:click="songClicked" style="height:100%; overflow:auto">
-        <div v-if="this.songLib">
-          <div
-            v-for="song in this.songLib.getSongList(this.sortprop, this.sortdescending, this.searchParameter)"
-            v-bind:key="song.id"
-            v-bind:data-songid="song.id"
-          >
-            <div v-if="song.id == selectedSong">
-              <b-card :title="song.title" :sub-title="song.artist" class="mb-1">
-                <p class="mr-1 mb-1" v-for="note in song.notes" v-bind:key="note.id">{{ note.note }}</p>
-                <b-button
-                  class="mr-1 mb-1"
-                  v-for="chart in song.charts"
-                  v-bind:href="chart.url"
-                  target="_blank"
-                  v-bind:key="chart.id"
-                >{{ chart.description }}</b-button>
-                <b-button
-                  class="mr-1 mb-1"
-                  v-for="link in song.links"
-                  v-bind:href="link.url"
-                  target="_blank"
-                  v-bind:key="link.id"
-                >{{ link.description }}</b-button>
-              </b-card>
-            </div>
-            <div v-else>
-              <b-list-group-item href="#" class="mb-1">
-                <span>{{ song.title }} - {{ song.artist }}</span>
-              </b-list-group-item>
+    <b-row>
+      <b-col md="8" offset-md="2">
+        <b-list-group v-on:click="songClicked" style="height:100%; overflow:auto">
+          <div v-if="this.songLib">
+            <div
+              v-for="song in this.songLib.getSongList(this.sortprop, this.sortdescending, this.searchParameter)"
+              v-bind:key="song.id"
+              v-bind:data-songid="song.id"
+            >
+              <div v-if="song.id == selectedSong">
+                <b-card :title="song.title" :sub-title="song.artist" class="mb-1">
+                  <p class="mr-1 mb-1" v-for="note in song.notes" v-bind:key="note.id">{{ note.note }}</p>
+                  <b-button
+                    class="mr-1 mb-1"
+                    v-for="chart in song.charts"
+                    v-bind:href="chart.url"
+                    target="_blank"
+                    v-bind:key="chart.id"
+                  >{{ chart.description }}</b-button>
+                  <b-button
+                    class="mr-1 mb-1"
+                    v-for="link in song.links"
+                    v-bind:href="link.url"
+                    target="_blank"
+                    v-bind:key="link.id"
+                  >{{ link.description }}</b-button>
+                </b-card>
+              </div>
+              <div v-else>
+                <b-list-group-item href="#" class="mb-1">
+                  <span>{{ song.title }} - {{ song.artist }}</span>
+                </b-list-group-item>
+              </div>
             </div>
           </div>
-        </div>
-      </b-list-group>
-    </b-col>
+        </b-list-group>
+      </b-col>
+    </b-row>
     <div id="liblistfooter"></div>
   </div>
 </template>
