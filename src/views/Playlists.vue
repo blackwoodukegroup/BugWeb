@@ -48,7 +48,7 @@ export default {
   methods: {
     selectPlaylist(id){
       this.selectedPlaylist = this.playlists[id];
-      console.log("select playlist: ", id);
+      // console.log("select playlist: ", id);
     },
     newPlaylist(){
       console.log("new playlist");

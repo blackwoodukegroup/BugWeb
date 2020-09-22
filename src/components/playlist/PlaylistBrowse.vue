@@ -19,9 +19,20 @@
             v-slot:cell(date)="data"
           >{{ (new Date(data.value)).toLocaleDateString("en-GB") }}</template>
           <template v-slot:cell(songs)="data">{{ data.value == null ? 0 : data.value.length }}</template>
+          
           <template
             v-slot:cell(type)="data"
           >{{ data.value == null ? "" : playlistTypes[data.value].description }}</template>
+
+          <template
+            v-slot:row-details="record"
+          >
+            <b-card body-class="pt-1 pb-1" v-for="song in record.item.songs" :key="song" :title="songs[song].title">
+              <b-card-text>{{ songs[song].artist }}
+              </b-card-text>
+            </b-card>
+          </template>
+        
         </b-table>
         <b-button @click="newPlaylist">New Playlist</b-button>
         <b-button @click="editPlaylist" :disabled="selectedPlaylist == null" class="ml-2">Edit</b-button>
@@ -50,6 +61,7 @@ export default {
   data: function () {
     return {
       selectedPlaylist: null,
+      lastSelectedPlaylist: null,
       playlistTableFields: [
         { key: "name", sortable: true },
         { key: "date", sortable: true },
@@ -78,7 +90,12 @@ export default {
   },
   methods: {
     selectPlaylist(record) {
+      if ( this.lastSelectedPlaylist ) {
+        this.lastSelectedPlaylist._showDetails = false;
+      }
       this.selectedPlaylist = record.id;
+      record._showDetails = true;
+      this.lastSelectedPlaylist = record;
       this.$emit("select-playlist", record.id);
     },
     newPlaylist(){
