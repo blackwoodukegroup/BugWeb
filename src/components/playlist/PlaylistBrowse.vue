@@ -24,14 +24,14 @@
             v-slot:cell(type)="data"
           >{{ data.value == null ? "" : playlistTypes[data.value].description }}</template>
 
-          <template
+          <!-- <template
             v-slot:row-details="record"
           >
             <b-card body-class="pt-1 pb-1" v-for="song in record.item.songs" :key="song" :title="songs[song].title">
               <b-card-text>{{ songs[song].artist }}
               </b-card-text>
             </b-card>
-          </template>
+          </template> -->
         
         </b-table>
         <b-button @click="newPlaylist">New Playlist</b-button>

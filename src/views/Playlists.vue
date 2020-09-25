@@ -1,5 +1,5 @@
 <template>
-  <b-overlay :show="playlists == null">
+  <b-overlay :show="playlists == null || playlistSaving">
     <div class="playlists">
       <PlaylistBrowse
         v-if="! editMode"
@@ -18,6 +18,7 @@
         :playlistTypes="playlistTypes"
         :songs="songs"
         :charts="charts"
+        @save-playlist="savePlaylist"
         @cancel-edit="cancelEdit"
       />
     </div>
@@ -41,6 +42,7 @@ export default {
       selectedPlaylist: null,
       playlists: null,
       playlistTypes: null,
+      playlistSaving: false,
       songs: null,
       charts: null
     };
@@ -48,7 +50,6 @@ export default {
   methods: {
     selectPlaylist(id){
       this.selectedPlaylist = this.playlists[id];
-      // console.log("select playlist: ", id);
     },
     newPlaylist(){
       console.log("new playlist");
@@ -68,6 +69,16 @@ export default {
     },
     duplicatePlaylist(id){
       console.log("duplicate playlist:", id);
+    },
+    savePlaylist(data){
+      console.log("edited playlist:", data)
+
+      if (this.editMode == "new") {
+        // todo: save new playlist
+      } else {
+        this.playlists[data.id] = Object.assign({}, data);
+        this.playlists[data.id].songs = data.songs.slice();
+      }
     }
   },
   computed: {
