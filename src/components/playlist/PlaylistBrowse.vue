@@ -10,6 +10,7 @@
           :items="playlistTableItems"
           :fields="playlistTableFields"
           sort-by="date"
+          primary-key="id"
           :sort-desc="true"
           :sort-compare-options="{ caseFirst: false }"
           selectable
@@ -35,16 +36,16 @@
         
         </b-table>
         <b-button @click="newPlaylist">New Playlist</b-button>
-        <b-button @click="editPlaylist" :disabled="selectedPlaylist == null" class="ml-2">Edit</b-button>
+        <b-button @click="editPlaylist" :disabled="selectedPlaylistID == null" class="ml-2">Edit</b-button>
         <b-button
           @click="deletePlaylist"
-          :disabled="selectedPlaylist == null"
+          :disabled="selectedPlaylistID == null"
           class="ml-2"
           variant="danger"
         >Delete</b-button>
         <b-button
           @click="duplicatePlaylist"
-          :disabled="selectedPlaylist == null"
+          :disabled="selectedPlaylistID == null"
           class="ml-2"
         >Duplicate</b-button>
       </b-col>
@@ -60,8 +61,8 @@ export default {
   name: "PlaylistBrowse",
   data: function () {
     return {
-      selectedPlaylist: null,
-      lastSelectedPlaylist: null,
+      selectedPlaylistID: null,
+      // lastSelectedPlaylistID: null,
       playlistTableFields: [
         { key: "name", sortable: true },
         { key: "date", sortable: true },
@@ -78,11 +79,17 @@ export default {
   },
   computed: {
     playlistTableItems() {
-      return Object.values(this.playlists);
+      // return Object.values(this.playlists);
+
+      return Object.entries(this.playlists).map( x=> { 
+        var q = Object.assign({}, x[1]);
+        q.id = x[0]
+        return q } 
+      );
     },
     songTableItems() {
-      if (this.selectedPlaylist == null) return [];
-      var playlistSongs = this.playlists[this.selectedPlaylist].songs ?? [];
+      if (this.selectedPlaylistID == null) return [];
+      var playlistSongs = this.playlists[this.selectedPlaylistID].songs ?? [];
       return Object.values(this.songs).filter((song) =>
         playlistSongs.includes(song.id)
       );
@@ -90,25 +97,26 @@ export default {
   },
   methods: {
     selectPlaylist(record) {
-      if ( this.lastSelectedPlaylist ) {
-        this.lastSelectedPlaylist._showDetails = false;
-      }
-      this.selectedPlaylist = record.id;
-      record._showDetails = true;
-      this.lastSelectedPlaylist = record;
+      this.selectedPlaylistID = record.id;
+      // if ( this.lastSelectedPlaylistID ) {
+      //   this.lastSelectedPlaylistID._showDetails = false;
+      // }
+      // this.selectedPlaylist = record.id;
+      // record._showDetails = true;
+      // this.lastSelectedPlaylist = record;
       this.$emit("select-playlist", record.id);
     },
     newPlaylist(){
         this.$emit("new-playlist");
     },
     editPlaylist() {
-        this.$emit("edit-playlist", this.selectedPlaylist);
+        this.$emit("edit-playlist", this.selectedPlaylistID);
     },
     deletePlaylist() {
-        this.$emit("delete-playlist", this.selectedPlaylist);
+        this.$emit("delete-playlist", this.selectedPlaylistID);
     },
     duplicatePlaylist() {
-        this.$emit("duplicate-playlist", this.selectedPlaylist);
+        this.$emit("duplicate-playlist", this.selectedPlaylistID);
     },
   },
 };

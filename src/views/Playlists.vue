@@ -14,7 +14,7 @@
       />
       <PlaylistEdit v-else 
         :editMode="editMode" 
-        :playlist="selectedPlaylist"
+        :playlist="playlists[selectedPlaylistID]"
         :playlistTypes="playlistTypes"
         :songs="songs"
         :charts="charts"
@@ -39,7 +39,7 @@ export default {
   data: function () {
     return {
       editMode: null, // editMode ( null=browser, edit=edit existing,  new=edit new)
-      selectedPlaylist: null,
+      selectedPlaylistID: null,
       playlists: null,
       playlistTypes: null,
       playlistSaving: false,
@@ -49,11 +49,11 @@ export default {
   },
   methods: {
     selectPlaylist(id){
-      this.selectedPlaylist = this.playlists[id];
+      this.selectedPlaylistID = id;
     },
     newPlaylist(){
       console.log("new playlist");
-      this.selectedPlaylist = null;
+      this.selectedPlaylistID = null;
       this.editMode ="new";
     },
     editPlaylist(id){
@@ -66,18 +66,20 @@ export default {
     },
     deletePlaylist(id){
       console.log("delete playlist:", id);
+
+      // todo: delete playlist
     },
     duplicatePlaylist(id){
       console.log("duplicate playlist:", id);
+
+      // todo: duplicate playlist
     },
     savePlaylist(data){
-      console.log("edited playlist:", data)
-
       if (this.editMode == "new") {
         // todo: save new playlist
       } else {
-        this.playlists[data.id] = Object.assign({}, data);
-        this.playlists[data.id].songs = data.songs.slice();
+        this.playlists[this.selectedPlaylistID] = data;
+        // todo: update existing playlist
       }
     }
   },

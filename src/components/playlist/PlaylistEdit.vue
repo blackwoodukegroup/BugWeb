@@ -58,7 +58,7 @@
         <b-list-group>
           <b-list-group-item
               class="py-1"
-              v-for="song in songs"
+              v-for="song in songList"
               :key="song.id"
               :active="song.id == selectedLibrarySongId"
               @click="selectedLibrarySongId=song.id"
@@ -88,6 +88,8 @@
 <script>
 import axios from "axios";
 import Vue from 'vue';
+// import * as helper from '@/helper/helper.js';
+import { cloneDeep } from 'lodash';
 
 export default {
     name: 'PlaylistEdit',
@@ -109,10 +111,15 @@ export default {
     },
     methods: {
       save(){
+        // todo: validation
+        var valid = true;
+        if ( valid ) {
           this.$emit("save-playlist", this.editedPlaylist)
+          this.dirty = false;
+        }
       },
       cancel(){
-          this.$emit("cancel-edit");
+        this.$emit("cancel-edit");
       },
       addSelectedSong(){
         this.editedPlaylist.songs.push(this.selectedLibrarySongId);
@@ -148,6 +155,12 @@ export default {
       }
     },
     computed: {
+      songList() {
+        return Object.entries(this.songs).map( (x) => { 
+          var q = Object.assign({}, x[1]);
+          q.id = x[0];
+        return q });
+      },
       playlistTypeOptions(){
           var options = this.playlistTypes;
 
@@ -159,6 +172,7 @@ export default {
           );
       },
       chartsForSelectedLibrarySong(){
+        if ( this.selectedLibrarySongId != undefined ) {
           var theSong = this.songs[this.selectedLibrarySongId];
           var chartIdsForTheSong = theSong.charts;
 
@@ -168,12 +182,16 @@ export default {
                   text: this.charts[id].description
               })
           )
-          
           return chartOptions;
+        } else {
+          return [];
+        }
       },
       defaultChartForSelectedLibrarySong: {
 
         get: function(){
+
+          if ( this.selectedLibrarySongId != undefined ) {
 
             var song = this.songs[this.selectedLibrarySongId]
 
@@ -199,8 +217,9 @@ export default {
                 if ( bugCharts.length == 1 )
                     return bugCharts[0];
             }
-
-            return null;
+          }
+          
+          return null;
         },
         set: function(newValue){
 
@@ -231,8 +250,8 @@ export default {
       }
     },
     created: function() {
-        this.editedPlaylist = Object.assign({}, this.playlist);
-        this.editedPlaylist.songs = this.playlist.songs.slice();
+      this.editedPlaylist = cloneDeep(this.playlist);
+      console.log('blah');
     }
 }
 </script>

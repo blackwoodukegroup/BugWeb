@@ -54,10 +54,11 @@ export default {
                 this.$appConstants.bugUrl + "?command=login",
                 {
                     username: this.username,
-                    password: this.CryptoJS.MD5(this.password).toString()
+                    password: this.password
                 },
                 {
-                    headers: {  'Content-Type': 'text/plain;charset=utf-8'}
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' } 
+                    // won't work with application/json due to CORS
                 }
             )
             .then((response) => {
