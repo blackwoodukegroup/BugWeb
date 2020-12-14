@@ -17,7 +17,8 @@ Vue.config.productionTip = false
 // global constants
 
 const appConstants = {
-  bugUrl: "https://script.google.com/macros/s/AKfycbxoeTQ5zyiDHMa3pUAbGk4Navv2gzJqnZOd_X3YuQvSLIV2gBA/exec"
+  bugUrl: "https://script.google.com/macros/s/AKfycbxoeTQ5zyiDHMa3pUAbGk4Navv2gzJqnZOd_X3YuQvSLIV2gBA/exec" // prod
+  // https://script.google.com/macros/s/AKfycbw7Ife6zWbHzTRHN3yiRJ37OcGE7rdy7N8Jn6wcNbE/dev" // dev
 }
 
 Vue.prototype.$appConstants = appConstants

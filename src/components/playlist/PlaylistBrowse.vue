@@ -4,7 +4,8 @@
       <b-col md="6">
         <b-table
           v-if="playlists"
-          @row-clicked="selectPlaylist"
+          ref="PlaylistTable"
+          @row-selected="selectPlaylist"
           hover
           small
           :items="playlistTableItems"
@@ -25,15 +26,6 @@
             v-slot:cell(type)="data"
           >{{ data.value == null ? "" : playlistTypes[data.value].description }}</template>
 
-          <!-- <template
-            v-slot:row-details="record"
-          >
-            <b-card body-class="pt-1 pb-1" v-for="song in record.item.songs" :key="song" :title="songs[song].title">
-              <b-card-text>{{ songs[song].artist }}
-              </b-card-text>
-            </b-card>
-          </template> -->
-        
         </b-table>
         <b-button @click="newPlaylist">New Playlist</b-button>
         <b-button @click="editPlaylist" :disabled="selectedPlaylistID == null" class="ml-2">Edit</b-button>
@@ -50,7 +42,11 @@
         >Duplicate</b-button>
       </b-col>
       <b-col md="6">
-        <b-table small :items="songTableItems" :fields="songTableFields"></b-table>
+        <b-table 
+          small 
+          :items="songTableItems" 
+          :fields="songTableFields">
+        </b-table>
       </b-col>
     </b-row>
   </div>
@@ -79,8 +75,6 @@ export default {
   },
   computed: {
     playlistTableItems() {
-      // return Object.values(this.playlists);
-
       return Object.entries(this.playlists).map( x=> { 
         var q = Object.assign({}, x[1]);
         q.id = x[0]
@@ -90,30 +84,36 @@ export default {
     songTableItems() {
       if (this.selectedPlaylistID == null) return [];
       var playlistSongs = this.playlists[this.selectedPlaylistID].songs ?? [];
-      return Object.values(this.songs).filter((song) =>
-        playlistSongs.includes(song.id)
-      );
+      var _this = this;
+      return Object.values(playlistSongs).map((songId) => {
+        return _this.songs[songId];
+      });
     },
   },
   methods: {
     selectPlaylist(record) {
-      this.selectedPlaylistID = record.id;
-      // if ( this.lastSelectedPlaylistID ) {
-      //   this.lastSelectedPlaylistID._showDetails = false;
-      // }
-      // this.selectedPlaylist = record.id;
-      // record._showDetails = true;
-      // this.lastSelectedPlaylist = record;
-      this.$emit("select-playlist", record.id);
+      if ( record.length == 0 ) {
+        this.selectedPlaylistID = null
+      } else {
+        this.selectedPlaylistID = record[0].id;
+      }
+      this.$emit("select-playlist", this.selectedPlaylistID);
     },
     newPlaylist(){
         this.$emit("new-playlist");
     },
     editPlaylist() {
+      if ( this.selectedPlaylistID != null ) {
         this.$emit("edit-playlist", this.selectedPlaylistID);
+      }
     },
     deletePlaylist() {
-        this.$emit("delete-playlist", this.selectedPlaylistID);
+      if ( this.selectedPlaylistID != null && confirm("Delete Playlist - Are You Sure?") ){
+        var deletePlaylistId = this.selectedPlaylistID;
+        this.selectedPlaylistID = null;
+        this.$refs.PlaylistTable.clearSelected();
+        this.$emit("delete-playlist", deletePlaylistId);
+      }
     },
     duplicatePlaylist() {
         this.$emit("duplicate-playlist", this.selectedPlaylistID);

@@ -3,19 +3,19 @@
     <b-row>
       <b-col md="8">
         <b-form-group label="Playlist Name" label-for="input-name">
-          <b-form-input id="input-name" v-model="editedPlaylist.name" @input="dirty=true"></b-form-input>
+          <b-form-input id="input-name" v-model="playlist.name" @input="dirty=true"></b-form-input>
         </b-form-group>
       </b-col>
       <b-col md="2">
         <b-form-group label="Date" label-for="input-date">
-          <b-form-input id="input-date" v-model="editedPlaylist.date" type="date" @input="dirty=true"></b-form-input>
+          <b-form-input id="input-date" v-model="playlist.date" type="date" @input="dirty=true"></b-form-input>
         </b-form-group>
       </b-col>
       <b-col md="2">
         <b-form-group label="Type" label-for="input-type">
           <b-form-select @input="dirty=true"
             id="input-type"
-            v-model="editedPlaylist.type"
+            v-model="playlist.type"
             :options="playlistTypeOptions"
           ></b-form-select>
         </b-form-group>
@@ -28,14 +28,14 @@
           <b-list-group>
             <b-list-group-item
               class="py-1"
-              v-for="(songId, songIndex) in editedPlaylist.songs"
+              v-for="(songId, songIndex) in playlist.songs"
               :key="songIndex"
               :active="songIndex == selectedPlaylistSongIndex"
               @click="selectedPlaylistSongIndex=songIndex"
             >
-              {{ getPlaylistSongNumberString(songIndex, editedPlaylist.songs.length) }} - {{ songs[songId].title }} - {{ songs[songId].artist }}
+              {{ getPlaylistSongNumberString(songIndex, playlist.songs.length) }} - {{ songs[songId].title }} - {{ songs[songId].artist }}
               <b-button-group size="sm" v-if="songIndex == selectedPlaylistSongIndex" style="float:right">
-                <b-button @click.stop="moveSongDown" :disabled="songIndex==editedPlaylist.songs.length-1">
+                <b-button @click.stop="moveSongDown" :disabled="songIndex==playlist.songs.length-1">
                   <b-icon icon="arrow-down" aria-hidden="true"></b-icon>
                 </b-button>
                 <b-button @click.stop="moveSongUp" :disabled="songIndex==0">
@@ -88,14 +88,11 @@
 <script>
 import axios from "axios";
 import Vue from 'vue';
-// import * as helper from '@/helper/helper.js';
-import { cloneDeep } from 'lodash';
 
 export default {
     name: 'PlaylistEdit',
     data: function(){
         return {
-            editedPlaylist: null,
             selectedPlaylistSongIndex: null,
             selectedLibrarySongId: null,
             showDefaultChartOverlay: false,
@@ -114,34 +111,34 @@ export default {
         // todo: validation
         var valid = true;
         if ( valid ) {
-          this.$emit("save-playlist", this.editedPlaylist)
-          this.dirty = false;
+          this.$emit("save-playlist", this.playlist)
+          this.dirty = false; // todo: this should only happen after succesful save
         }
       },
       cancel(){
         this.$emit("cancel-edit");
       },
       addSelectedSong(){
-        this.editedPlaylist.songs.push(this.selectedLibrarySongId);
+        this.playlist.songs.push(this.selectedLibrarySongId);
         this.dirty = true;
       },
       moveSongUp(){
-        var temp = this.editedPlaylist.songs[this.selectedPlaylistSongIndex -1];
-        Vue.set(this.editedPlaylist.songs, this.selectedPlaylistSongIndex -1, this.editedPlaylist.songs[this.selectedPlaylistSongIndex]);
-        Vue.set(this.editedPlaylist.songs, this.selectedPlaylistSongIndex, temp);
+        var temp = this.playlist.songs[this.selectedPlaylistSongIndex -1];
+        Vue.set(this.playlist.songs, this.selectedPlaylistSongIndex -1, this.playlist.songs[this.selectedPlaylistSongIndex]);
+        Vue.set(this.playlist.songs, this.selectedPlaylistSongIndex, temp);
         this.selectedPlaylistSongIndex--;
         this.dirty = true;
       },
       moveSongDown(){
-        var temp = this.editedPlaylist.songs[this.selectedPlaylistSongIndex +1];
-        Vue.set(this.editedPlaylist.songs, this.selectedPlaylistSongIndex +1, this.editedPlaylist.songs[this.selectedPlaylistSongIndex]);
-        Vue.set(this.editedPlaylist.songs, this.selectedPlaylistSongIndex, temp);
+        var temp = this.playlist.songs[this.selectedPlaylistSongIndex +1];
+        Vue.set(this.playlist.songs, this.selectedPlaylistSongIndex +1, this.playlist.songs[this.selectedPlaylistSongIndex]);
+        Vue.set(this.playlist.songs, this.selectedPlaylistSongIndex, temp);
         this.selectedPlaylistSongIndex++;
         this.dirty = true;
       },
       removeSong(){
         if ( confirm("Remove Song - Are You Sure?") ){
-          this.editedPlaylist.songs.splice(this.selectedPlaylistSongIndex, 1);
+          this.playlist.songs.splice(this.selectedPlaylistSongIndex, 1);
           this.selectedPlaylistSongIndex = null;
           this.dirty = true;
         }
@@ -248,10 +245,6 @@ export default {
             });
         }
       }
-    },
-    created: function() {
-      this.editedPlaylist = cloneDeep(this.playlist);
-      console.log('blah');
     }
 }
 </script>
