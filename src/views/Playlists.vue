@@ -1,5 +1,5 @@
 <template>
-  <b-overlay :show="playlists == null || playlistSaving">
+  <b-overlay :show="playlists == null || networkOperation">
     <div class="playlists">
       <PlaylistBrowse
         v-if="! editMode"
@@ -45,7 +45,7 @@ export default {
       selectedPlaylistID: null,
       playlists: null,
       playlistTypes: null,
-      playlistSaving: false,
+      networkOperation: false,
       songs: null,
       charts: null
     };
@@ -65,12 +65,15 @@ export default {
     },
     cancelEdit(){
       console.log("cancel edit");
+      this.playlist = null;
       this.editMode = null;
     },
     deletePlaylist(playlistIdToDelete){
       console.log("delete playlist:", playlistIdToDelete);
 
       var _this = this;
+
+      this.networkOperation = true;
 
       Axios.post(
         this.$appConstants.bugUrl +
@@ -83,6 +86,7 @@ export default {
             // won't work with application/json due to CORS
         }
       ).then((response) => {
+        this.networkOperation = false;
         console.log(response);
         if ( response.status == 200 && response.data && response.data.status == "success" ) {
           
@@ -102,6 +106,7 @@ export default {
         }
 
       }).catch((err) => {
+        this.networkOperation = false;
         alert("Network Error: " + err.message);
         console.log(err);
       });
@@ -112,6 +117,13 @@ export default {
     },
     savePlaylist(updatedPlaylist){
       var _this = this;
+
+      if ( this.editMode == "copy" ) {
+        // if duplicating an existing playlist, set ID to null so that a new record is created
+        this.selectedPlaylistID = null;
+      }
+
+      this.networkOperation = true;
 
       Axios.post(
         this.$appConstants.bugUrl +
@@ -125,6 +137,7 @@ export default {
             // won't work with application/json due to CORS
         }
       ).then((response) => {
+        this.networkOperation = false;
         console.log(response);
         if ( response.status == 200 && response.data && response.data.status == "success" ) {
           
@@ -137,10 +150,10 @@ export default {
             // a 'true' indicates a successfull update
             
             _this.$set(_this.playlists, _this.selectedPlaylistID, updatedPlaylist);
-
           }
         }
       }).catch((err) => {
+        this.networkOperation = false;
         alert("Network Error: " + err.message);
         console.log(err);
       });
@@ -152,7 +165,15 @@ export default {
     },
     playlistToEdit() {
       if ( this.selectedPlaylistID == null ) {
-        return PlaylistLib.newPlaylist();
+        if ( this.editMode == "new" ) {
+          return PlaylistLib.newPlaylist();
+        }
+        else if ( this.editMode == "copy" ) {
+          return PlaylistLib.copyPlaylist(this.playlists[this.selectedPlaylistID]);
+        }
+        else {
+          return null; // should never happen
+        }
       }
       else {
         return cloneDeep(this.playlists[this.selectedPlaylistID]);
